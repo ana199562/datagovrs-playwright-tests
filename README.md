@@ -5,6 +5,7 @@ portal. Automated with Playwright and TypeScript.
 
 - [Manual test cases](docs/test-cases.md): 39 cases, each covered by automated tests
 - [Findings](docs/findings.md): 9 issues found on the site, with steps to reproduce
+- [Latest test report](https://ana199562.github.io/datagovrs-playwright-tests/): updated weekly and on every change
 
 The main finding: 98.6% of datasets have Cyrillic titles, and search doesn't match across scripts.
 `буџет` finds 166 datasets. `budžet` and `budzet` find none.
