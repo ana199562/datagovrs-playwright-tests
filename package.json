@@ -1,0 +1,24 @@
+{
+  "name": "datagovrs-playwright-tests",
+  "version": "1.0.0",
+  "description": "Manual and automated tests for data.gov.rs, the Serbian open data portal.",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "test": "playwright test",
+    "test:api": "playwright test --project=api",
+    "test:ui": "playwright test --project=ui",
+    "test:unit": "playwright test --project=unit",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:known-issues": "playwright test --grep @known-issue",
+    "test:headed": "playwright test --project=ui --headed",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2"
+  }
+}
