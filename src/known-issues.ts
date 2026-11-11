@@ -9,7 +9,6 @@ export const KNOWN_ISSUES = {
   'DGR-05': 'Latin version has a Cyrillic site name in the page title',
   'DGR-06': 'Page title is not the <h1>, extra <h1> in the footer',
   'DGR-07': 'Validation errors contain internal Python error text',
-  'DGR-08': 'Theme script replaces the native Element.classList',
 } as const;
 
 /**

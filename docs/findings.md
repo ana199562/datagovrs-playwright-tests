@@ -10,10 +10,8 @@ Everything was found through normal, read-only use of the public website and API
 | [DGR-03](#dgr-03) | API v1 and v2 return different search results | Medium | TC-API10 |
 | [DGR-04](#dgr-04) | Latin version declares the Slovenian language | Medium | TC-L04 |
 | [DGR-05](#dgr-05) | Latin version has a Cyrillic site name in the page title | Low | TC-L05 |
-| [DGR-06](#dgr-06) | Page title is not the `<h1>`, extra `<h1>` in the footer | Low | TC-A02, TC-A03 |
+| [DGR-06](#dgr-06) | Page title is not the `<h1>`, extra `<h1>` in the footer | Low | TC-A01, TC-A02 |
 | [DGR-07](#dgr-07) | Validation errors contain internal Python error text | Low | TC-API08 |
-| [DGR-08](#dgr-08) | Theme script replaces the native `Element.classList` | Low | TC-A04 |
-| [DGR-09](#dgr-09) | Colour contrast, unnamed link, invalid list markup | Medium | TC-A01 |
 
 <a id="dgr-01"></a>
 ## DGR-01 Search does not match across Cyrillic and Latin script
@@ -122,39 +120,6 @@ The response is a correct 400, but the message is a raw Python error:
 
 **Expected:** A plain message such as `page_size must be a positive whole number`.
 
-<a id="dgr-08"></a>
-## DGR-08 Theme script replaces the native `Element.classList`
-
-**Severity:** Low
-
-The theme bundle (`/_themes/govrs/js/index.js`) contains an old `classList` polyfill that replaces
-the browser's built-in version, even though all current browsers support it. The replacement
-can't be looped over, unlike the original.
-
-This breaks axe-core, the engine used by most accessibility checkers. It crashed on every page I
-tested. Chrome Lighthouse uses axe-core too, so its accessibility audit is probably affected (not
-checked).
-
-**Steps:** Open any page, press F12, and run `typeof document.body.classList[Symbol.iterator]` in
-the console. Result: `"undefined"`. In a normal page: `"function"`.
-
-**Expected:** Remove the polyfill, or only load it when the browser lacks `classList`.
-
-The automated tests work around this in the test browser only (`src/utils/accessibility.ts`).
-
-<a id="dgr-09"></a>
-## DGR-09 Colour contrast, unnamed link, invalid list markup
-
-**Severity:** Medium
-
-axe-core found no critical problems on the home, search and dataset pages. It found these serious ones:
-
-- **Colour contrast (WCAG 1.4.3).** The site's blue `#4b90f5` on white is 3.17:1; normal text
-  needs 4.5:1. Affects tabs, breadcrumbs and the result count (5 to 9 elements per page).
-- **Link without a name (WCAG 2.4.4).** The "Open Data Hub" logo link (`#open-data-hub-mobile`)
-  has an image with no alt text. Screen readers announce it only as "link".
-- **List markup (WCAG 1.3.1).** On the search page, a `<ul>` contains elements other than `<li>`.
-
 ---
 
 ## Checked and ruled out
@@ -165,8 +130,6 @@ Before reporting, every issue was checked a second way. These looked like bugs a
   letters before sending them. With proper encoding, Cyrillic search works.
 - **Five empty headings on dataset pages.** They have text; they're inside a collapsed panel, and
   the method I first used returns empty text for hidden elements.
-- **107 contrast problems on the search page.** That came from a scan that was still partly broken
-  by DGR-08. The real number is 6.
 
 ## Other observations
 

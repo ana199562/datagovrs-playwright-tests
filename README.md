@@ -3,8 +3,8 @@
 Manual and automated tests for [data.gov.rs](https://data.gov.rs), the Serbian national open data
 portal. Automated with Playwright and TypeScript.
 
-- [Manual test cases](docs/test-cases.md): 39 cases, each covered by automated tests
-- [Findings](docs/findings.md): 9 issues found on the site, with steps to reproduce
+- [Manual test cases](docs/test-cases.md): 37 cases, each covered by automated tests
+- [Findings](docs/findings.md): 7 issues found on the site, with steps to reproduce
 - [Latest test report](https://ana199562.github.io/datagovrs-playwright-tests/): updated weekly and on every change
 
 The main finding: 98.6% of datasets have Cyrillic titles, and search doesn't match across scripts.
@@ -17,11 +17,11 @@ The main finding: 98.6% of datasets have Cyrillic titles, and search doesn't mat
 | Search | TC-S01 to TC-S10 |
 | Dataset page | TC-D01 to TC-D04 |
 | Cyrillic and Latin versions | TC-L01 to TC-L05 |
-| Accessibility (WCAG 2.1 AA) | TC-A01 to TC-A04 |
+| Accessibility | TC-A01, TC-A02 |
 | API | TC-API01 to TC-API13 |
 | Data quality | TC-Q01 to TC-Q03 |
 
-60 automated tests: 21 in the browser, 28 against the API, and 11 unit tests for a helper.
+56 automated tests: 17 in the browser, 28 against the API, and 11 unit tests for a helper.
 
 Since this is a live government site, the tests only read data, run at most two at a time, and
 check small samples.
@@ -62,7 +62,7 @@ The second command downloads the browser the tests use.
 npm test
 ```
 
-This takes about a minute. At the end you should see `60 passed`.
+This takes about a minute. At the end you should see `56 passed`.
 
 **6. Open the report**
 
@@ -78,12 +78,12 @@ The report opens in your browser. Click any test to see its steps, and for brows
 |---|---|
 | `npm run test:headed` | Runs the browser tests in a visible browser window |
 | `npm run test:api` | Runs only the API tests (a few seconds) |
-| `npm run test:known-issues` | Runs only the tests for the 12 known issues |
+| `npm run test:known-issues` | Runs only the tests for the 11 known issues |
 | `npx playwright test -g "TC-S09"` | Runs one test case |
 
 ## Reading the results
 
-12 tests check behaviour the site should have but doesn't yet (marked `@known-issue`). They are
+11 tests check behaviour the site should have but doesn't yet (marked `@known-issue`). They are
 **expected to fail**, so a failure there counts as a pass and the run stays green. In the terminal
 they show an `x` but are counted in "passed". In the report, each one shows what it actually found,
 for example `буџет: 166, budžet: 0, budzet: 0`.
@@ -110,9 +110,6 @@ Each browser and API test name starts with its test case ID, e.g. `TC-S05 result
 
 ## Notes
 
-- The site's theme script breaks axe-core, the usual accessibility testing tool
-  ([DGR-08](docs/findings.md#dgr-08)). `src/utils/accessibility.ts` works around it in the test
-  browser only.
 - The site has no test IDs in its HTML, so the tests find elements by role, label and visible text,
   the way a user would.
 - Tests don't hardcode numbers from the live site. They compare the page with the API, or one

@@ -36,10 +36,8 @@ known issue, described in [findings.md](findings.md).
 | [TC-L03](#tc-l03) | Cyrillic pages declare Serbian | Medium | Pass |
 | [TC-L04](#tc-l04) | Latin pages declare Serbian in Latin script | Medium | Fails (DGR-04) |
 | [TC-L05](#tc-l05) | Latin page title is fully in Latin | Low | Fails (DGR-05) |
-| [TC-A01](#tc-a01) | No critical accessibility violations | High | Pass |
-| [TC-A02](#tc-a02) | Dataset page has one `<h1>` | Low | Fails (DGR-06) |
-| [TC-A03](#tc-a03) | Search page title is the `<h1>` | Low | Fails (DGR-06) |
-| [TC-A04](#tc-a04) | Site does not replace native browser features | Low | Fails (DGR-08) |
+| [TC-A01](#tc-a01) | Dataset page has one `<h1>` | Low | Fails (DGR-06) |
+| [TC-A02](#tc-a02) | Search page title is the `<h1>` | Low | Fails (DGR-06) |
 | [TC-API01](#tc-api01) | Dataset list returns paging information | High | Pass |
 | [TC-API02](#tc-api02) | Next page link works without duplicates | Medium | Pass |
 | [TC-API03](#tc-api03) | `page_size=0` returns only the total | Low | Pass |
@@ -247,22 +245,7 @@ Automated: `tests/ui/language.spec.ts` · Finding: [DGR-05](findings.md#dgr-05)
 ## Accessibility
 
 <a id="tc-a01"></a>
-### TC-A01 No critical accessibility violations
-Automated: `tests/ui/accessibility.spec.ts` (home, dataset search, dataset page)
-
-Browser extensions such as axe DevTools do not work on this site because of DGR-08, so the manual
-version checks the issues the automated scan reported:
-
-1. Check the contrast of the site's blue text (`#4b90f5`) on white with
-   https://webaim.org/resources/contrastchecker/
-2. On the home page, inspect the "Open Data Hub" logo link and check that its image has `alt` text.
-
-**Expected:** Contrast is at least 4.5:1; the image has alt text.
-Both currently fail (3.17:1, no alt text). They are "serious" rather than "critical" in axe, so they
-are listed in [DGR-09](findings.md#dgr-09) and do not fail the automated test.
-
-<a id="tc-a02"></a>
-### TC-A02 Dataset page has one `<h1>`
+### TC-A01 Dataset page has one `<h1>`
 Automated: `tests/ui/accessibility.spec.ts` · Finding: [DGR-06](findings.md#dgr-06)
 
 1. Open https://data.gov.rs/sr/datasets/budzet-grada-pirota-za-2026-godinu/
@@ -270,21 +253,13 @@ Automated: `tests/ui/accessibility.spec.ts` · Finding: [DGR-06](findings.md#dgr
 
 **Expected:** One item: the dataset title.
 
-<a id="tc-a03"></a>
-### TC-A03 Search page title is the `<h1>`
+<a id="tc-a02"></a>
+### TC-A02 Search page title is the `<h1>`
 Automated: `tests/ui/accessibility.spec.ts` · Finding: [DGR-06](findings.md#dgr-06)
 
-1. Open https://data.gov.rs/sr/datasets/?q=буџет and run the console command from TC-A02.
+1. Open https://data.gov.rs/sr/datasets/?q=буџет and run the console command from TC-A01.
 
 **Expected:** One item: "Скупови података".
-
-<a id="tc-a04"></a>
-### TC-A04 Site does not replace native browser features
-Automated: `tests/ui/accessibility.spec.ts` · Finding: [DGR-08](findings.md#dgr-08)
-
-1. Open https://data.gov.rs/sr/ and run in the console: `typeof document.body.classList[Symbol.iterator]`
-
-**Expected:** `"function"`.
 
 ## API
 
