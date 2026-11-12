@@ -27,6 +27,8 @@ known issue, described in [findings.md](findings.md).
 | [TC-S08](#tc-s08) | Opening a search result | High | Pass |
 | [TC-S09](#tc-s09) | Same word in Cyrillic and Latin finds the same datasets | High | Fails (DGR-01) |
 | [TC-S10](#tc-s10) | Searching for a tag finds tagged datasets | Medium | Fails (DGR-02) |
+| [TC-S11](#tc-s11) | Filtering by file format | Medium | Pass |
+| [TC-S12](#tc-s12) | Filtering by publisher | Medium | Pass |
 | [TC-D01](#tc-d01) | Dataset page shows correct title, publisher and file count | High | Pass |
 | [TC-D02](#tc-d02) | Publisher link opens the right organization | Medium | Pass |
 | [TC-D03](#tc-d03) | Search, open dataset, open publisher | High | Pass |
@@ -157,6 +159,29 @@ Automated: `tests/api/search.spec.ts` · Finding: [DGR-02](findings.md#dgr-02)
 2. Open https://data.gov.rs/api/2/datasets/search/?q=budzet&page_size=1
 
 **Expected:** The search in step 2 returns at least as many datasets as step 1.
+
+<a id="tc-s11"></a>
+### TC-S11 Filtering by file format
+Automated: `tests/ui/search.spec.ts`
+
+1. Open https://data.gov.rs/sr/datasets/?q=буџет
+2. In the format filter ("Претрага формата..."), type `csv` and choose **csv**.
+3. Open https://data.gov.rs/api/2/datasets/search/?q=буџет&format=csv&page_size=1 and note `total`.
+4. Open the first three results.
+
+**Expected:** The address contains `format=csv`, the result count equals `total`, and each opened
+dataset has at least one CSV file.
+
+<a id="tc-s12"></a>
+### TC-S12 Filtering by publisher
+Automated: `tests/ui/search.spec.ts`
+
+1. Open https://data.gov.rs/sr/datasets/?q=буџет and note the publisher of the first result.
+2. In the organization filter ("Претрага организација..."), type the publisher's name and choose it.
+3. Copy the `organization` value from the address and open
+   https://data.gov.rs/api/2/datasets/search/?q=буџет&organization=<value>&page_size=1
+
+**Expected:** The result count equals `total`, and the first results are all from that publisher.
 
 ## Dataset page
 
