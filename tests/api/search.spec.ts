@@ -1,6 +1,6 @@
 import { test, expect } from '../../src/fixtures';
 import { knownIssue } from '../../src/known-issues';
-import { CROSS_SCRIPT_TERMS, NO_MATCH_TERM, TAGGED_TERM } from '../../src/data/search-terms';
+import { CROSS_SCRIPT_TERMS, NO_MATCH_TERM, SAMPLE_ORGANIZATION, TAGGED_TERM } from '../../src/data/search-terms';
 import { spellingVariants } from '../../src/utils/serbian';
 
 test.describe('Search API', () => {
@@ -73,8 +73,7 @@ test.describe('Search API', () => {
   });
 
   test('TC-API09 v1 and v2 agree on organization filter', async ({ api }) => {
-    const { data } = await api.listDatasets({ pageSize: 1 });
-    const organization = data[0].organization!.id;
+    const { id: organization } = await api.getOrganization(SAMPLE_ORGANIZATION);
 
     const [v1, v2] = await Promise.all([
       api.listDatasets({ organization, pageSize: 1 }),
