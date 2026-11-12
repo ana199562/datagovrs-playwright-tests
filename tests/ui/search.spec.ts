@@ -60,4 +60,38 @@ test.describe('Search page', () => {
     expect(cyrillicTotal).toBeGreaterThan(0);
     expect(latinTotal).toBe(cyrillicTotal);
   });
+
+  test('TC-S11 filtering by file format', async ({ searchPage, api, page }) => {
+    await searchPage.goto('буџет');
+
+    await searchPage.chooseFilter(searchPage.formatFilter, 'csv');
+
+    await expect(page).toHaveURL(/[?&]format=csv/);
+    const fromApi = await api.searchDatasetsV2({ q: 'буџет', format: 'csv', pageSize: 1 });
+    expect(fromApi.total).toBeGreaterThan(0);
+    expect(await searchPage.total()).toBe(fromApi.total);
+
+    // Check the first few results really have a CSV file
+    for (const slug of (await searchPage.resultSlugs()).slice(0, 3)) {
+      const dataset = await api.getDataset(slug);
+      expect(dataset.resources.map((r) => r.format.toLowerCase()), slug).toContain('csv');
+    }
+  });
+
+  test('TC-S12 filtering by publisher', async ({ searchPage, api, page }) => {
+    const { data } = await api.searchDatasetsV2({ q: 'буџет', sort: '-last_update', pageSize: 1 });
+    const publisher = data[0].organization!;
+
+    await searchPage.goto('буџет');
+    await searchPage.chooseFilter(searchPage.organizationFilter, publisher.name);
+
+    expect(new URL(page.url()).searchParams.get('organization')).toBe(publisher.id);
+    const fromApi = await api.searchDatasetsV2({ q: 'буџет', organization: publisher.id, pageSize: 1 });
+    expect(await searchPage.total()).toBe(fromApi.total);
+
+    for (const slug of (await searchPage.resultSlugs()).slice(0, 3)) {
+      const dataset = await api.getDataset(slug);
+      expect(dataset.organization?.id, slug).toBe(publisher.id);
+    }
+  });
 });

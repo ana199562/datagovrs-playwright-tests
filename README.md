@@ -3,7 +3,7 @@
 Manual and automated tests for [data.gov.rs](https://data.gov.rs), the Serbian national open data
 portal. Automated with Playwright and TypeScript.
 
-- [Manual test cases](docs/test-cases.md): 37 cases, each covered by automated tests
+- [Manual test cases](docs/test-cases.md): 39 cases, each covered by automated tests
 - [Findings](docs/findings.md): 7 issues found on the site, with steps to reproduce
 - [Latest test report](https://ana199562.github.io/datagovrs-playwright-tests/): updated weekly and on every change
 
@@ -14,14 +14,14 @@ The main finding: 98.6% of datasets have Cyrillic titles, and search doesn't mat
 
 | Area | Test cases |
 |---|---|
-| Search | TC-S01 to TC-S10 |
+| Search | TC-S01 to TC-S12 |
 | Dataset page | TC-D01 to TC-D04 |
 | Cyrillic and Latin versions | TC-L01 to TC-L05 |
 | Accessibility | TC-A01, TC-A02 |
 | API | TC-API01 to TC-API13 |
 | Data quality | TC-Q01 to TC-Q03 |
 
-56 automated tests: 17 in the browser, 28 against the API, and 11 unit tests for a helper.
+58 automated tests: 19 in the browser, 28 against the API, and 11 unit tests for a helper.
 
 Since this is a live government site, the tests only read data, run at most two at a time, and
 check small samples.
@@ -62,7 +62,7 @@ The second command downloads the browser the tests use.
 npm test
 ```
 
-This takes about a minute. At the end you should see `56 passed`.
+This takes about a minute. At the end you should see `58 passed`.
 
 **6. Open the report**
 

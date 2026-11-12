@@ -8,6 +8,7 @@ type ListParams = {
   pageSize?: number;
   tag?: string;
   organization?: string;
+  format?: string;
 };
 
 // Read-only client for the data.gov.rs API. The website uses v2 search, so v2 is the reference.
@@ -67,7 +68,7 @@ export class PortalApi {
   }
 }
 
-function toQuery({ q, sort, page, pageSize, tag, organization }: ListParams) {
+function toQuery({ q, sort, page, pageSize, tag, organization, format }: ListParams) {
   const query: Record<string, string | number> = {};
   if (q !== undefined) query.q = q;
   if (sort !== undefined) query.sort = sort;
@@ -75,5 +76,6 @@ function toQuery({ q, sort, page, pageSize, tag, organization }: ListParams) {
   if (pageSize !== undefined) query.page_size = pageSize;
   if (tag !== undefined) query.tag = tag;
   if (organization !== undefined) query.organization = organization;
+  if (format !== undefined) query.format = format;
   return query;
 }
