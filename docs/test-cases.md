@@ -338,7 +338,8 @@ Automated: `tests/api/search.spec.ts`
 1. Compare `total` in:
    - https://data.gov.rs/api/1/datasets/?tag=budzet&page_size=1
    - https://data.gov.rs/api/2/datasets/search/?tag=budzet&page_size=1
-2. Repeat with `organization=<id>` instead of `tag=budzet`, using an organization ID from any dataset.
+2. Repeat with `organization=<id>` instead of `tag=budzet`, using the `id` from
+   https://data.gov.rs/api/1/organizations/grad-pirot/
 
 **Expected:** Totals are equal in both comparisons.
 
@@ -359,7 +360,8 @@ Automated: `tests/api/portal.spec.ts`
 1. Open https://data.gov.rs/api/1/site/ and note `metrics.datasets` and `metrics.organizations`.
 2. Open https://data.gov.rs/api/1/datasets/?page_size=0 and https://data.gov.rs/api/1/organizations/?page_size=1 and note each `total`.
 
-**Expected:** The numbers match.
+**Expected:** The numbers match, or differ by less than 1%. The site statistics are recalculated
+from time to time, so datasets published in the last few hours may not be counted yet.
 
 <a id="tc-api12"></a>
 ### TC-API12 Organization statistics match its datasets

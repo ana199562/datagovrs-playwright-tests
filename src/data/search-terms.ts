@@ -7,3 +7,9 @@ export const CROSS_SCRIPT_TERMS = ['буџет', 'Шабац', 'ваздух'] a
 export const TAGGED_TERM = 'budzet';
 
 export const NO_MATCH_TERM = 'qxzv-nepostojeci-pojam';
+
+/**
+ * A publisher with many datasets (TC-API09, TC-API12). Fixed, because the newest dataset
+ * can come from a user account with no organization.
+ */
+export const SAMPLE_ORGANIZATION = 'grad-pirot';
