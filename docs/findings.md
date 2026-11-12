@@ -90,9 +90,19 @@ engines and translation tools treat the pages as Slovenian.
 
 **Severity:** Low
 
-On https://data.gov.rs/sl/datasets/ the tab title is `Skupovi podataka - Портал отворених података`.
+The site name is in the page `<title>`, which shows in the browser tab, bookmarks and search
+results. It is not in the visible page, so Ctrl+F does not find it.
+
+**Steps**
+1. Open https://data.gov.rs/sl/datasets/.
+2. Hover over the browser tab, or open DevTools and run `document.title` in the Console.
+3. The title is `Skupovi podataka - Портал отворених података`. The `og:title` meta tag, used
+   for link previews, has the same text.
 
 **Expected:** `Skupovi podataka - Portal otvorenih podataka`.
+
+Dataset titles in Cyrillic on this page are expected. They are content written by publishers,
+not part of the site's interface.
 
 <a id="dgr-06"></a>
 ## DGR-06 Page title is not the `<h1>`, extra `<h1>` in the footer
@@ -121,19 +131,3 @@ The response is a correct 400, but the message is a raw Python error:
 **Expected:** A plain message such as `page_size must be a positive whole number`.
 
 ---
-
-## Checked and ruled out
-
-Before reporting, every issue was checked a second way. These looked like bugs at first but weren't:
-
-- **Cyrillic search returning nothing at all.** My Windows terminal was garbling the Cyrillic
-  letters before sending them. With proper encoding, Cyrillic search works.
-- **Five empty headings on dataset pages.** They have text; they're inside a collapsed panel, and
-  the method I first used returns empty text for hidden elements.
-
-## Other observations
-
-- Dataset URLs spell `џ` two ways: `budzet-grada-pirota-za-2026-godinu` and
-  `budzhet-grada-pirota-za-2022-godinu`, both from the same city.
-- A page number past the end (`?page=99999`) returns 404 instead of an empty list. Unusual, but
-  consistent, so the tests treat it as the expected behaviour.
