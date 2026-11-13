@@ -176,12 +176,12 @@ dataset has at least one CSV file.
 ### TC-S12 Filtering by publisher
 Automated: `tests/ui/search.spec.ts`
 
-1. Open https://data.gov.rs/sr/datasets/?q=буџет and note the publisher of the first result.
-2. In the organization filter ("Претрага организација..."), type the publisher's name and choose it.
+1. Open https://data.gov.rs/sr/datasets/?q=буџет
+2. In the organization filter ("Претрага организација..."), type `Град Пирот` and choose it.
 3. Copy the `organization` value from the address and open
    https://data.gov.rs/api/2/datasets/search/?q=буџет&organization=<value>&page_size=1
 
-**Expected:** The result count equals `total`, and the first results are all from that publisher.
+**Expected:** The result count equals `total`, and the first results are all from Град Пирот.
 
 ## Dataset page
 

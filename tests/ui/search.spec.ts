@@ -1,6 +1,6 @@
 import { test, expect } from '../../src/fixtures';
 import { knownIssue } from '../../src/known-issues';
-import { NO_MATCH_TERM } from '../../src/data/search-terms';
+import { NO_MATCH_TERM, SAMPLE_ORGANIZATION } from '../../src/data/search-terms';
 
 test.describe('Search page', () => {
   test('TC-S04 search with no matches shows zero results', async ({ searchPage }) => {
@@ -67,29 +67,34 @@ test.describe('Search page', () => {
     await searchPage.chooseFilter(searchPage.formatFilter, 'csv');
 
     await expect(page).toHaveURL(/[?&]format=csv/);
-    const fromApi = await api.searchDatasetsV2({ q: 'буџет', format: 'csv', pageSize: 1 });
+    const fromApi = await api.searchDatasetsV2({ q: 'буџет', format: 'csv', sort: '-last_update', pageSize: 3 });
     expect(fromApi.total).toBeGreaterThan(0);
-    expect(await searchPage.total()).toBe(fromApi.total);
+    await expect.poll(() => searchPage.total()).toBe(fromApi.total);
+    // The result cards update a moment after the count
+    const slugs = fromApi.data.map((d) => d.slug);
+    await expect.poll(async () => (await searchPage.resultSlugs()).slice(0, 3)).toEqual(slugs);
 
-    // Check the first few results really have a CSV file
-    for (const slug of (await searchPage.resultSlugs()).slice(0, 3)) {
+    // Check these results really have a CSV file
+    for (const slug of slugs) {
       const dataset = await api.getDataset(slug);
       expect(dataset.resources.map((r) => r.format.toLowerCase()), slug).toContain('csv');
     }
   });
 
   test('TC-S12 filtering by publisher', async ({ searchPage, api, page }) => {
-    const { data } = await api.searchDatasetsV2({ q: 'буџет', sort: '-last_update', pageSize: 1 });
-    const publisher = data[0].organization!;
+    const publisher = await api.getOrganization(SAMPLE_ORGANIZATION);
 
     await searchPage.goto('буџет');
     await searchPage.chooseFilter(searchPage.organizationFilter, publisher.name);
 
     expect(new URL(page.url()).searchParams.get('organization')).toBe(publisher.id);
-    const fromApi = await api.searchDatasetsV2({ q: 'буџет', organization: publisher.id, pageSize: 1 });
-    expect(await searchPage.total()).toBe(fromApi.total);
+    const fromApi = await api.searchDatasetsV2({ q: 'буџет', organization: publisher.id, sort: '-last_update', pageSize: 3 });
+    await expect.poll(() => searchPage.total()).toBe(fromApi.total);
+    // The result cards update a moment after the count
+    const slugs = fromApi.data.map((d) => d.slug);
+    await expect.poll(async () => (await searchPage.resultSlugs()).slice(0, 3)).toEqual(slugs);
 
-    for (const slug of (await searchPage.resultSlugs()).slice(0, 3)) {
+    for (const slug of slugs) {
       const dataset = await api.getDataset(slug);
       expect(dataset.organization?.id, slug).toBe(publisher.id);
     }
