@@ -9,6 +9,7 @@ export class DatasetSearchPage {
   readonly resultLinks: Locator;
   readonly organizationFilter: Locator;
   readonly formatFilter: Locator;
+  readonly filterIcon: Locator;
 
   constructor(private readonly page: Page) {
     // The page title is an <h3>, not an <h1> (DGR-06)
@@ -19,6 +20,8 @@ export class DatasetSearchPage {
     this.resultLinks = page.locator('a:has(> article.dataset-search-result)');
     this.organizationFilter = page.getByRole('main').getByRole('textbox', { name: /Претрага организација|Pretraga organizacija/ });
     this.formatFilter = page.getByRole('main').getByRole('textbox', { name: /Претрага формата|Pretraga formata/ });
+    // Only shown on small screens. It is a <div> with no label, so it is found by its class.
+    this.filterIcon = page.locator('.filter-icon');
   }
 
   async goto(query: string, script: Script = 'cyrillic') {
@@ -34,11 +37,15 @@ export class DatasetSearchPage {
   }
 
   // Filters are dropdowns with a search box: type, then pick the option from the list.
+  // The publisher list loads in the background and clears the box when it arrives,
+  // so wait for it before typing.
   async chooseFilter(filter: Locator, option: string) {
     const urlBefore = this.page.url();
+    const options = filter.locator('..').locator('.multiselect-option');
+    await expect(options).not.toHaveCount(0);
     await filter.click();
     await filter.fill(option);
-    await filter.locator('..').locator('.multiselect-option').getByText(option, { exact: true }).click();
+    await options.getByText(option, { exact: true }).click();
     await expect(this.page).not.toHaveURL(urlBefore);
     await expect(this.totalCount).toBeVisible();
   }

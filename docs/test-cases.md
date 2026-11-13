@@ -40,6 +40,7 @@ known issue, described in [findings.md](findings.md).
 | [TC-L05](#tc-l05) | Latin page title is fully in Latin | Low | Fails (DGR-05) |
 | [TC-A01](#tc-a01) | Dataset page has one `<h1>` | Low | Fails (DGR-06) |
 | [TC-A02](#tc-a02) | Search page title is the `<h1>` | Low | Fails (DGR-06) |
+| [TC-M01](#tc-m01) | Filters open from the filter icon on a phone | Medium | Pass |
 | [TC-API01](#tc-api01) | Dataset list returns paging information | High | Pass |
 | [TC-API02](#tc-api02) | Next page link works without duplicates | Medium | Pass |
 | [TC-API03](#tc-api03) | `page_size=0` returns only the total | Low | Pass |
@@ -176,12 +177,12 @@ dataset has at least one CSV file.
 ### TC-S12 Filtering by publisher
 Automated: `tests/ui/search.spec.ts`
 
-1. Open https://data.gov.rs/sr/datasets/?q=буџет and note the publisher of the first result.
-2. In the organization filter ("Претрага организација..."), type the publisher's name and choose it.
+1. Open https://data.gov.rs/sr/datasets/?q=буџет
+2. In the organization filter ("Претрага организација..."), type `Град Пирот` and choose it.
 3. Copy the `organization` value from the address and open
    https://data.gov.rs/api/2/datasets/search/?q=буџет&organization=<value>&page_size=1
 
-**Expected:** The result count equals `total`, and the first results are all from that publisher.
+**Expected:** The result count equals `total`, and the first results are all from Град Пирот.
 
 ## Dataset page
 
@@ -285,6 +286,20 @@ Automated: `tests/ui/accessibility.spec.ts` · Finding: [DGR-06](findings.md#dgr
 1. Open https://data.gov.rs/sr/datasets/?q=буџет and run the console command from TC-A01.
 
 **Expected:** One item: "Скупови података".
+
+## Phone screen
+
+<a id="tc-m01"></a>
+### TC-M01 Filters open from the filter icon on a phone
+Automated: `tests/ui/phone.spec.ts`
+
+1. On a phone, or in Chrome DevTools with the device toolbar set to Pixel 7, open
+   https://data.gov.rs/sr/datasets/?q=буџет
+2. The filters are not shown. Tap the round filter icon next to the search box.
+3. In the format filter, choose **csv**.
+
+**Expected:** The filters appear after step 2. After step 3, the result count is the same as in
+TC-S11.
 
 ## API
 
