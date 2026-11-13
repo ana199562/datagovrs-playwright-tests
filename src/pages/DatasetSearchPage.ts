@@ -9,6 +9,7 @@ export class DatasetSearchPage {
   readonly resultLinks: Locator;
   readonly organizationFilter: Locator;
   readonly formatFilter: Locator;
+  readonly filterIcon: Locator;
 
   constructor(private readonly page: Page) {
     // The page title is an <h3>, not an <h1> (DGR-06)
@@ -19,6 +20,8 @@ export class DatasetSearchPage {
     this.resultLinks = page.locator('a:has(> article.dataset-search-result)');
     this.organizationFilter = page.getByRole('main').getByRole('textbox', { name: /Претрага организација|Pretraga organizacija/ });
     this.formatFilter = page.getByRole('main').getByRole('textbox', { name: /Претрага формата|Pretraga formata/ });
+    // Only shown on small screens. It is a <div> with no label, so it is found by its class.
+    this.filterIcon = page.locator('.filter-icon');
   }
 
   async goto(query: string, script: Script = 'cyrillic') {
