@@ -41,4 +41,17 @@ test.describe('Dataset page', () => {
     const response = await page.goto('/sr/datasets/ovaj-skup-podataka-ne-postoji/');
     expect(response?.status()).toBe(404);
   });
+
+  test('TC-D05 Latin version shows the same dataset', async ({ api, datasetPage }) => {
+    const publisher = await api.getOrganization(SAMPLE_ORGANIZATION);
+    const dataset = await api.firstDatasetOf(publisher.id);
+
+    await datasetPage.goto(dataset.slug, 'latin');
+
+    // Titles and names are written by publishers, so they stay in Cyrillic
+    await expect(datasetPage.title).toHaveText(dataset.title);
+    await expect(datasetPage.organizationLink).toContainText(publisher.name);
+    await expect(datasetPage.organizationLink).toHaveAttribute('href', /\/sl\/organizations\//);
+    expect(await datasetPage.resourceCount()).toBe(dataset.resources.length);
+  });
 });

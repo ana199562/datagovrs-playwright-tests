@@ -33,6 +33,7 @@ known issue, described in [findings.md](findings.md).
 | [TC-D02](#tc-d02) | Publisher link opens the right organization | Medium | Pass |
 | [TC-D03](#tc-d03) | Search, open dataset, open publisher | High | Pass |
 | [TC-D04](#tc-d04) | Unknown dataset returns 404 | Low | Pass |
+| [TC-D05](#tc-d05) | Latin version shows the same dataset | Medium | Pass |
 | [TC-L01](#tc-l01) | Switching to Latin keeps the page and search | High | Pass |
 | [TC-L02](#tc-l02) | Switching back to Cyrillic | Medium | Pass |
 | [TC-L03](#tc-l03) | Cyrillic pages declare Serbian | Medium | Pass |
@@ -224,6 +225,19 @@ Automated: `tests/ui/dataset.spec.ts`
 1. Open https://data.gov.rs/sr/datasets/ovaj-skup-podataka-ne-postoji/
 
 **Expected:** A "not found" page (HTTP 404).
+
+<a id="tc-d05"></a>
+### TC-D05 Latin version shows the same dataset
+Automated: `tests/ui/dataset.spec.ts`
+
+1. Open https://data.gov.rs/sl/datasets/budzet-grada-pirota-za-2026-godinu/
+2. Compare the title, publisher and "Resursi" number with the API response from TC-D01.
+3. Hover over the publisher link.
+
+**Expected:** The same title, publisher and number of files as in the API. The publisher link
+stays on the Latin version (`/sl/organizations/...`).
+
+Titles and publisher names stay in Cyrillic, because publishers write them.
 
 ## Cyrillic and Latin versions
 
