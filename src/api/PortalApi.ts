@@ -1,4 +1,4 @@
-import { APIRequestContext, APIResponse, expect } from '@playwright/test';
+import { type APIRequestContext, type APIResponse, expect } from '@playwright/test';
 import type { Dataset, Organization, Page, Site } from './types';
 
 type ListParams = {

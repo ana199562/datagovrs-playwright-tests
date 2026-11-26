@@ -1,5 +1,5 @@
-import { Locator, Page } from '@playwright/test';
-import { Script, UI_TEXT } from './Lang';
+import type { Locator, Page } from '@playwright/test';
+import { type Script, UI_TEXT } from './Lang';
 
 const OPTION_VALUE: Record<Script, string> = { cyrillic: 'sr', latin: 'sl' };
 
