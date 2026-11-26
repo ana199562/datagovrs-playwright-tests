@@ -22,6 +22,7 @@ export interface Dataset {
   title: string;
   description: string;
   license: string | null;
+  created_at: string;
   tags: string[];
   organization: { id: string; name: string; slug: string } | null;
   owner: { id: string } | null;

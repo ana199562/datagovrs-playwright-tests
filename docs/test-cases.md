@@ -54,6 +54,8 @@ known issue, described in [findings.md](findings.md).
 | [TC-API11](#tc-api11) | Site statistics match real totals | Medium | Pass |
 | [TC-API12](#tc-api12) | Organization statistics match its datasets | Low | Pass |
 | [TC-API13](#tc-api13) | API documentation is published | Low | Pass |
+| [TC-API14](#tc-api14) | Invalid `sort` value returns 400 | Low | Pass |
+| [TC-API15](#tc-api15) | Sorting by creation date puts the newest first | Medium | Pass |
 | [TC-Q01](#tc-q01) | Datasets have a publisher and a license | Medium | Pass |
 | [TC-Q02](#tc-q02) | Datasets have files with a format and a valid link | Medium | Pass |
 | [TC-Q03](#tc-q03) | Dataset files can be downloaded | Medium | Pass |
@@ -419,6 +421,23 @@ Automated: `tests/api/portal.spec.ts`
 1. Open https://data.gov.rs/api/1/swagger.json
 
 **Expected:** Valid JSON with `"swagger": "2.0"`, listing `/datasets/`, `/organizations/` and `/site/`.
+
+<a id="tc-api14"></a>
+### TC-API14 Invalid `sort` value returns 400
+Automated: `tests/api/datasets.spec.ts`
+
+1. Open https://data.gov.rs/api/1/datasets/?sort=not-a-field&page_size=1
+
+**Expected:** 400, and `errors` names the `sort` field.
+
+<a id="tc-api15"></a>
+### TC-API15 Sorting by creation date puts the newest first
+Automated: `tests/api/datasets.spec.ts`
+
+1. Open https://data.gov.rs/api/1/datasets/?sort=-created&page_size=20
+2. Compare the `created_at` values from top to bottom.
+
+**Expected:** Each date is the same as or earlier than the one before it.
 
 ## Data quality
 

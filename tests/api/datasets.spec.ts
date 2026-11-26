@@ -68,4 +68,18 @@ test.describe('Datasets API', () => {
     test.info().annotations.push({ type: 'observed', description: body.slice(0, 200) });
     expect(body).not.toMatch(/int\(\)|base 10|Traceback/);
   });
+
+  test('TC-API14 invalid sort value returns 400', async ({ api }) => {
+    const response = await api.listDatasetsRaw({ sort: 'not-a-field' });
+
+    expect(response.status()).toBe(400);
+    expect((await response.json()).errors).toHaveProperty('sort');
+  });
+
+  test('TC-API15 sorting by creation date puts the newest first', async ({ api }) => {
+    const { data } = await api.listDatasets({ sort: '-created', pageSize: 20 });
+    const dates = data.map((d) => d.created_at);
+
+    expect(dates).toEqual([...dates].sort().reverse());
+  });
 });
