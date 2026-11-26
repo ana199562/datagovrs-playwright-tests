@@ -1,4 +1,4 @@
-import { APIRequestContext, APIResponse, expect } from '@playwright/test';
+import { type APIRequestContext, type APIResponse, expect } from '@playwright/test';
 import type { Dataset, Organization, Page, Site } from './types';
 
 type ListParams = {
@@ -38,6 +38,12 @@ export class PortalApi {
 
   async getPage<T>(url: string) {
     return this.json<Page<T>>(await this.request.get(url));
+  }
+
+  async firstDatasetOf(organizationId: string) {
+    const { data } = await this.listDatasets({ organization: organizationId, pageSize: 1 });
+    expect(data, `datasets of organization ${organizationId}`).toHaveLength(1);
+    return data[0];
   }
 
   getOrganizationRaw(slug: string) {

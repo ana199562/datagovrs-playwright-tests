@@ -13,9 +13,11 @@
     "test:known-issues": "playwright test --grep @known-issue",
     "test:headed": "playwright test --project=ui --headed",
     "report": "playwright show-report",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "biome lint ."
   },
   "devDependencies": {
+    "@biomejs/biome": "2.6.6",
     "@playwright/test": "^1.65.0",
     "@types/node": "^26.6.6",
     "typescript": "^7.0.2"

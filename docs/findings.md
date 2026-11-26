@@ -1,6 +1,7 @@
 # Findings
 
-Issues found on [data.gov.rs](https://data.gov.rs) on 11 Nov 2026. Numbers are from that day.
+Issues found on [data.gov.rs](https://data.gov.rs) on 11 Nov 2026, and DGR-08 on 26 Nov 2026.
+Numbers are from the day each issue was found.
 Everything was found through normal, read-only use of the public website and API.
 
 | ID | Issue | Severity | Test case |
@@ -12,6 +13,7 @@ Everything was found through normal, read-only use of the public website and API
 | [DGR-05](#dgr-05) | Latin version has a Cyrillic site name in the page title | Low | TC-L05 |
 | [DGR-06](#dgr-06) | Page title is not the `<h1>`, extra `<h1>` in the footer | Low | TC-A01, TC-A02 |
 | [DGR-07](#dgr-07) | Validation errors contain internal Python error text | Low | TC-API08 |
+| [DGR-08](#dgr-08) | Negative `page_size` causes a server error | Medium | TC-API16 |
 
 <a id="dgr-01"></a>
 ## DGR-01 Search does not match across Cyrillic and Latin script
@@ -129,5 +131,25 @@ The response is a correct 400, but the message is a raw Python error:
 `The page size invalid literal for int() with base 10: 'abc'`
 
 **Expected:** A plain message such as `page_size must be a positive whole number`.
+
+<a id="dgr-08"></a>
+## DGR-08 Negative `page_size` causes a server error
+
+**Severity:** Medium
+
+Found on 26 Nov 2026.
+
+**Steps**
+1. Open https://data.gov.rs/api/1/datasets/?page_size=-5
+2. The response is `500 Internal Server Error`.
+
+The same happens with `page_size=-1`, on https://data.gov.rs/api/2/datasets/search/?page_size=-5
+and on https://data.gov.rs/api/1/organizations/?page_size=-5.
+
+Other invalid values are handled: `page_size=abc` and `sort=not-a-field` return 400 with a message.
+
+**Expected:** 400, with a message that `page_size` must be a positive whole number.
+
+A 500 means the server does not check the value before using it.
 
 ---

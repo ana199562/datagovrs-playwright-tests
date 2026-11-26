@@ -1,5 +1,5 @@
-import { Locator, Page } from '@playwright/test';
-import { PATH_PREFIX, Script } from './Lang';
+import type { Locator, Page } from '@playwright/test';
+import { PATH_PREFIX, type Script } from './Lang';
 
 export class DatasetPage {
   readonly title: Locator;

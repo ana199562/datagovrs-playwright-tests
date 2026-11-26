@@ -10,8 +10,9 @@ npx playwright test -g "TC-S05"
 All cases can be run by hand with just a web browser. For API cases, open the URL in Firefox
 (it formats JSON nicely) or Chrome. No account is needed.
 
-**Result** is from the automated run on 12 Nov 2026. "Fails (DGR-xx)" means the case finds a
-known issue, described in [findings.md](findings.md).
+**Result** is from the automated run on 12 Nov 2026. TC-D05 and TC-API14 to TC-API16 were added
+on 26 Nov 2026 and checked by hand that day. "Fails (DGR-xx)" means the case finds a known issue,
+described in [findings.md](findings.md).
 
 ## Summary
 
@@ -33,6 +34,7 @@ known issue, described in [findings.md](findings.md).
 | [TC-D02](#tc-d02) | Publisher link opens the right organization | Medium | Pass |
 | [TC-D03](#tc-d03) | Search, open dataset, open publisher | High | Pass |
 | [TC-D04](#tc-d04) | Unknown dataset returns 404 | Low | Pass |
+| [TC-D05](#tc-d05) | Latin version shows the same dataset | Medium | Pass |
 | [TC-L01](#tc-l01) | Switching to Latin keeps the page and search | High | Pass |
 | [TC-L02](#tc-l02) | Switching back to Cyrillic | Medium | Pass |
 | [TC-L03](#tc-l03) | Cyrillic pages declare Serbian | Medium | Pass |
@@ -54,6 +56,9 @@ known issue, described in [findings.md](findings.md).
 | [TC-API11](#tc-api11) | Site statistics match real totals | Medium | Pass |
 | [TC-API12](#tc-api12) | Organization statistics match its datasets | Low | Pass |
 | [TC-API13](#tc-api13) | API documentation is published | Low | Pass |
+| [TC-API14](#tc-api14) | Invalid `sort` value returns 400 | Low | Pass |
+| [TC-API15](#tc-api15) | Sorting by creation date puts the newest first | Medium | Pass |
+| [TC-API16](#tc-api16) | Negative `page_size` returns 400 | Medium | Fails (DGR-08) |
 | [TC-Q01](#tc-q01) | Datasets have a publisher and a license | Medium | Pass |
 | [TC-Q02](#tc-q02) | Datasets have files with a format and a valid link | Medium | Pass |
 | [TC-Q03](#tc-q03) | Dataset files can be downloaded | Medium | Pass |
@@ -222,6 +227,19 @@ Automated: `tests/ui/dataset.spec.ts`
 1. Open https://data.gov.rs/sr/datasets/ovaj-skup-podataka-ne-postoji/
 
 **Expected:** A "not found" page (HTTP 404).
+
+<a id="tc-d05"></a>
+### TC-D05 Latin version shows the same dataset
+Automated: `tests/ui/dataset.spec.ts`
+
+1. Open https://data.gov.rs/sl/datasets/budzet-grada-pirota-za-2026-godinu/
+2. Compare the title, publisher and "Resursi" number with the API response from TC-D01.
+3. Hover over the publisher link.
+
+**Expected:** The same title, publisher and number of files as in the API. The publisher link
+stays on the Latin version (`/sl/organizations/...`).
+
+Titles and publisher names stay in Cyrillic, because publishers write them.
 
 ## Cyrillic and Latin versions
 
@@ -419,6 +437,33 @@ Automated: `tests/api/portal.spec.ts`
 1. Open https://data.gov.rs/api/1/swagger.json
 
 **Expected:** Valid JSON with `"swagger": "2.0"`, listing `/datasets/`, `/organizations/` and `/site/`.
+
+<a id="tc-api14"></a>
+### TC-API14 Invalid `sort` value returns 400
+Automated: `tests/api/datasets.spec.ts`
+
+1. Open https://data.gov.rs/api/1/datasets/?sort=not-a-field&page_size=1
+
+**Expected:** 400, and `errors` names the `sort` field.
+
+<a id="tc-api15"></a>
+### TC-API15 Sorting by creation date puts the newest first
+Automated: `tests/api/datasets.spec.ts`
+
+1. Open https://data.gov.rs/api/1/datasets/?sort=-created&page_size=20
+2. Compare the `created_at` values from top to bottom.
+
+**Expected:** Each date is the same as or earlier than the one before it.
+
+<a id="tc-api16"></a>
+### TC-API16 Negative `page_size` returns 400
+Automated: `tests/api/datasets.spec.ts` · Finding: [DGR-08](findings.md#dgr-08)
+
+1. Open https://data.gov.rs/api/1/datasets/?page_size=-5
+2. Open https://data.gov.rs/api/2/datasets/search/?page_size=-5
+3. Open https://data.gov.rs/api/1/organizations/?page_size=-5
+
+**Expected:** 400 with a message about `page_size`, like for `page_size=abc` in TC-API07.
 
 ## Data quality
 

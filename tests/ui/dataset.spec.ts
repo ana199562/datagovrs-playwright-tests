@@ -1,27 +1,28 @@
 import { test, expect } from '../../src/fixtures';
+import { SAMPLE_ORGANIZATION } from '../../src/data/search-terms';
 
 test.describe('Dataset page', () => {
   test('TC-D01 shows correct title, publisher and file count @smoke', async ({ api, datasetPage }) => {
-    const { data } = await api.listDatasets({ q: 'буџет', pageSize: 1 });
-    const dataset = await api.getDataset(data[0].slug);
+    const publisher = await api.getOrganization(SAMPLE_ORGANIZATION);
+    const dataset = await api.firstDatasetOf(publisher.id);
 
     await datasetPage.goto(dataset.slug);
 
     await expect(datasetPage.title).toHaveText(dataset.title);
-    await expect(datasetPage.organizationLink).toContainText(dataset.organization!.name);
+    await expect(datasetPage.organizationLink).toContainText(publisher.name);
     expect(await datasetPage.resourceCount()).toBe(dataset.resources.length);
   });
 
   test('TC-D02 publisher link opens the right organization', async ({ api, datasetPage, organizationPage, page }) => {
-    const { data } = await api.listDatasets({ q: 'буџет', pageSize: 1 });
-    const dataset = data[0];
+    const publisher = await api.getOrganization(SAMPLE_ORGANIZATION);
+    const dataset = await api.firstDatasetOf(publisher.id);
 
     await datasetPage.goto(dataset.slug);
     await datasetPage.organizationLink.click();
 
     await expect(page).toHaveURL(/\/organizations\//);
-    expect(organizationPage.slugFromUrl()).toBe(dataset.organization!.slug);
-    await expect(organizationPage.name).toHaveText(dataset.organization!.name);
+    expect(organizationPage.slugFromUrl()).toBe(publisher.slug);
+    await expect(organizationPage.name).toHaveText(publisher.name);
   });
 
   test('TC-D03 search, open dataset, open publisher', async ({ searchPage, datasetPage, organizationPage, page }) => {
@@ -39,5 +40,18 @@ test.describe('Dataset page', () => {
   test('TC-D04 unknown dataset returns 404', async ({ page }) => {
     const response = await page.goto('/sr/datasets/ovaj-skup-podataka-ne-postoji/');
     expect(response?.status()).toBe(404);
+  });
+
+  test('TC-D05 Latin version shows the same dataset', async ({ api, datasetPage }) => {
+    const publisher = await api.getOrganization(SAMPLE_ORGANIZATION);
+    const dataset = await api.firstDatasetOf(publisher.id);
+
+    await datasetPage.goto(dataset.slug, 'latin');
+
+    // Titles and names are written by publishers, so they stay in Cyrillic
+    await expect(datasetPage.title).toHaveText(dataset.title);
+    await expect(datasetPage.organizationLink).toContainText(publisher.name);
+    await expect(datasetPage.organizationLink).toHaveAttribute('href', /\/sl\/organizations\//);
+    expect(await datasetPage.resourceCount()).toBe(dataset.resources.length);
   });
 });

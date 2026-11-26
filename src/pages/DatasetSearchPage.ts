@@ -1,5 +1,5 @@
-import { expect, Locator, Page } from '@playwright/test';
-import { PATH_PREFIX, Script, UI_TEXT } from './Lang';
+import { expect, type Locator, type Page } from '@playwright/test';
+import { PATH_PREFIX, type Script, UI_TEXT } from './Lang';
 
 export class DatasetSearchPage {
   readonly heading: Locator;

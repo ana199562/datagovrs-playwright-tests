@@ -68,4 +68,30 @@ test.describe('Datasets API', () => {
     test.info().annotations.push({ type: 'observed', description: body.slice(0, 200) });
     expect(body).not.toMatch(/int\(\)|base 10|Traceback/);
   });
+
+  test('TC-API14 invalid sort value returns 400', async ({ api }) => {
+    const response = await api.listDatasetsRaw({ sort: 'not-a-field' });
+
+    expect(response.status()).toBe(400);
+    expect((await response.json()).errors).toHaveProperty('sort');
+  });
+
+  test('TC-API15 sorting by creation date puts the newest first', async ({ api }) => {
+    const { data } = await api.listDatasets({ sort: '-created', pageSize: 20 });
+    const dates = data.map((d) => d.created_at);
+
+    expect(dates).toEqual([...dates].sort().reverse());
+  });
+
+  test('TC-API16 negative page_size returns 400 @known-issue', async ({ request }) => {
+    knownIssue('DGR-08');
+
+    const observed: string[] = [];
+    for (const url of ['/api/1/datasets/', '/api/2/datasets/search/', '/api/1/organizations/']) {
+      const response = await request.get(url, { params: { page_size: -5 } });
+      observed.push(`${url}: ${response.status()}`);
+      expect.soft(response.status(), url).toBe(400);
+    }
+    test.info().annotations.push({ type: 'observed', description: observed.join(', ') });
+  });
 });
