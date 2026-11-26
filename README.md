@@ -1,5 +1,7 @@
 # data.gov.rs tests
 
+[![Tests](https://github.com/ana199562/datagovrs-playwright-tests/actions/workflows/tests.yml/badge.svg)](https://github.com/ana199562/datagovrs-playwright-tests/actions/workflows/tests.yml)
+
 Manual and automated tests for [data.gov.rs](https://data.gov.rs), the Serbian national open data
 portal. Automated with Playwright and TypeScript.
 
@@ -9,6 +11,16 @@ portal. Automated with Playwright and TypeScript.
 
 The main finding: 98.6% of datasets have Cyrillic titles, and search doesn't match across scripts.
 `буџет` finds 166 datasets. `budžet` and `budzet` find none.
+
+## Overview
+
+- 59 automated tests: 20 in the browser, 28 against the API, and 11 unit tests for a helper
+- Page objects and fixtures for the website, and a small client for the REST API
+- Tests check the website against the API, so they don't depend on numbers that change every day
+- Known issues are marked as expected failures, so the run stays green until the site is fixed
+- GitHub Actions runs type checks, lint and all tests on every push and once a week, and publishes the report
+
+**Tools:** Playwright, TypeScript, Node.js, Biome, GitHub Actions, GitHub Pages
 
 ## What's tested
 
@@ -22,56 +34,28 @@ The main finding: 98.6% of datasets have Cyrillic titles, and search doesn't mat
 | API | TC-API01 to TC-API13 |
 | Data quality | TC-Q01 to TC-Q03 |
 
-59 automated tests: 20 in the browser, 28 against the API, and 11 unit tests for a helper.
-
 Since this is a live government site, the tests only read data, run at most two at a time, and
 check small samples.
 
 ## Running the tests
 
-You need a computer with Windows, macOS or Linux and an internet connection. It takes about
-10 minutes the first time.
-
-**1. Install Node.js**
-
-Download the LTS version from https://nodejs.org and install it with the default options.
-
-**2. Get the project**
-
-On this project's GitHub page, click **Code**, then **Download ZIP**, and unzip it.
-(If you use Git: `git clone` the repository instead.)
-
-**3. Open a terminal in the project folder**
-
-- Windows: open the unzipped folder, right-click inside it and choose **Open in Terminal**.
-- macOS: right-click the folder in Finder, then **Services** > **New Terminal at Folder**.
-
-**4. Install the project** (once)
+You need [Node.js](https://nodejs.org) (LTS version) and an internet connection.
 
 ```bash
+git clone https://github.com/ana199562/datagovrs-playwright-tests.git
+cd datagovrs-playwright-tests
 npm install
-```
-```bash
 npx playwright install chromium
-```
-
-The second command downloads the browser the tests use.
-
-**5. Run the tests**
-
-```bash
 npm test
 ```
 
-This takes about a minute. At the end you should see `59 passed`.
-
-**6. Open the report**
+The tests take about a minute. At the end you should see `59 passed`. To open the report:
 
 ```bash
 npm run report
 ```
 
-The report opens in your browser. Click any test to see its steps, and for browser tests, screenshots.
+Click any test to see its steps, and for browser tests, screenshots.
 
 ### Other commands
 
@@ -81,6 +65,8 @@ The report opens in your browser. Click any test to see its steps, and for brows
 | `npm run test:api` | Runs only the API tests (a few seconds) |
 | `npm run test:known-issues` | Runs only the tests for the 11 known issues |
 | `npx playwright test -g "TC-S09"` | Runs one test case |
+| `npm run typecheck` | Checks the TypeScript types |
+| `npm run lint` | Checks the code with Biome |
 
 ## Reading the results
 
@@ -115,4 +101,3 @@ Each browser and API test name starts with its test case ID, e.g. `TC-S05 result
   the way a user would.
 - Tests don't hardcode numbers from the live site. They compare the page with the API, or one
   spelling with another, so they keep working as the data changes.
-- GitHub Actions runs the tests on every push and once a week.
