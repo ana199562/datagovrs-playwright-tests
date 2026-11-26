@@ -10,8 +10,9 @@ npx playwright test -g "TC-S05"
 All cases can be run by hand with just a web browser. For API cases, open the URL in Firefox
 (it formats JSON nicely) or Chrome. No account is needed.
 
-**Result** is from the automated run on 12 Nov 2026. "Fails (DGR-xx)" means the case finds a
-known issue, described in [findings.md](findings.md).
+**Result** is from the automated run on 12 Nov 2026. TC-D05 and TC-API14 to TC-API16 were added
+on 26 Nov 2026 and checked by hand that day. "Fails (DGR-xx)" means the case finds a known issue,
+described in [findings.md](findings.md).
 
 ## Summary
 
