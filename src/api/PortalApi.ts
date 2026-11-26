@@ -40,6 +40,12 @@ export class PortalApi {
     return this.json<Page<T>>(await this.request.get(url));
   }
 
+  async firstDatasetOf(organizationId: string) {
+    const { data } = await this.listDatasets({ organization: organizationId, pageSize: 1 });
+    expect(data, `datasets of organization ${organizationId}`).toHaveLength(1);
+    return data[0];
+  }
+
   getOrganizationRaw(slug: string) {
     return this.request.get(`/api/1/organizations/${encodeURIComponent(slug)}/`);
   }
