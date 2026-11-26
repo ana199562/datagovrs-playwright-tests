@@ -57,6 +57,7 @@ known issue, described in [findings.md](findings.md).
 | [TC-API13](#tc-api13) | API documentation is published | Low | Pass |
 | [TC-API14](#tc-api14) | Invalid `sort` value returns 400 | Low | Pass |
 | [TC-API15](#tc-api15) | Sorting by creation date puts the newest first | Medium | Pass |
+| [TC-API16](#tc-api16) | Negative `page_size` returns 400 | Medium | Fails (DGR-08) |
 | [TC-Q01](#tc-q01) | Datasets have a publisher and a license | Medium | Pass |
 | [TC-Q02](#tc-q02) | Datasets have files with a format and a valid link | Medium | Pass |
 | [TC-Q03](#tc-q03) | Dataset files can be downloaded | Medium | Pass |
@@ -452,6 +453,16 @@ Automated: `tests/api/datasets.spec.ts`
 2. Compare the `created_at` values from top to bottom.
 
 **Expected:** Each date is the same as or earlier than the one before it.
+
+<a id="tc-api16"></a>
+### TC-API16 Negative `page_size` returns 400
+Automated: `tests/api/datasets.spec.ts` · Finding: [DGR-08](findings.md#dgr-08)
+
+1. Open https://data.gov.rs/api/1/datasets/?page_size=-5
+2. Open https://data.gov.rs/api/2/datasets/search/?page_size=-5
+3. Open https://data.gov.rs/api/1/organizations/?page_size=-5
+
+**Expected:** 400 with a message about `page_size`, like for `page_size=abc` in TC-API07.
 
 ## Data quality
 

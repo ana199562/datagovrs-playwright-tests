@@ -82,4 +82,16 @@ test.describe('Datasets API', () => {
 
     expect(dates).toEqual([...dates].sort().reverse());
   });
+
+  test('TC-API16 negative page_size returns 400 @known-issue', async ({ request }) => {
+    knownIssue('DGR-08');
+
+    const observed: string[] = [];
+    for (const url of ['/api/1/datasets/', '/api/2/datasets/search/', '/api/1/organizations/']) {
+      const response = await request.get(url, { params: { page_size: -5 } });
+      observed.push(`${url}: ${response.status()}`);
+      expect.soft(response.status(), url).toBe(400);
+    }
+    test.info().annotations.push({ type: 'observed', description: observed.join(', ') });
+  });
 });
