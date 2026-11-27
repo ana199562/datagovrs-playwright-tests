@@ -26,6 +26,10 @@ test.describe('Transliteration helper', () => {
     expect(stripDiacritics('Đorđe Ćosić, Šabac, budžet, čaj')).toBe('Djordje Cosic, Sabac, budzet, caj');
   });
 
+  test('strips diacritics from text in capitals', () => {
+    expect(stripDiacritics('ĐORĐE ĆOSIĆ')).toBe('DJORDJE COSIC');
+  });
+
   test('returns all three spellings', () => {
     expect(spellingVariants('буџет')).toEqual({ cyrillic: 'буџет', latin: 'budžet', ascii: 'budzet' });
   });

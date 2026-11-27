@@ -14,7 +14,7 @@ The main finding: 98.6% of datasets have Cyrillic titles, and search doesn't mat
 
 ## Overview
 
-- 63 automated tests: 21 in the browser, 31 against the API, and 11 unit tests for a helper
+- 64 automated tests: 21 in the browser, 31 against the API, and 12 unit tests for a helper
 - Page objects and fixtures for the website, and a small client for the REST API
 - Tests check the website against the API, so they don't depend on numbers that change every day
 - Known issues are marked as expected failures, so the run stays green until the site is fixed
@@ -49,7 +49,7 @@ npx playwright install chromium
 npm test
 ```
 
-The tests take about a minute. At the end you should see `63 passed`. To open the report:
+The tests take about a minute. At the end you should see `64 passed`. To open the report:
 
 ```bash
 npm run report
