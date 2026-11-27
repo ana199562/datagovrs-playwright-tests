@@ -31,7 +31,16 @@ export function cyrillicToLatin(text: string): string {
 }
 
 export function stripDiacritics(text: string): string {
-  return [...text].map((c) => WITHOUT_DIACRITICS[c] ?? c).join('');
+  const chars = [...text];
+  return chars
+    .map((char, i) => {
+      const plain = WITHOUT_DIACRITICS[char] ?? char;
+      // Đ -> Dj in "Đorđe", but DJ in "ĐORĐE"
+      const next = chars[i + 1];
+      const nextIsUpper = next !== undefined && next !== next.toLowerCase();
+      return char === 'Đ' && nextIsUpper ? 'DJ' : plain;
+    })
+    .join('');
 }
 
 export function spellingVariants(cyrillic: string) {
